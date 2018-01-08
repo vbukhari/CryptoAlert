@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Bit Coin Alert</title>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"  crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-switch/3.3.4/js/bootstrap-switch.min.js" crossorigin="anonymous"></script>
+	<link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
+	<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-switch/3.3.4/css/bootstrap3/bootstrap-switch.min.css" rel="stylesheet" crossorigin="anonymous">
+	<!-- Latest compiled and minified CSS -->
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/css/bootstrap-select.min.css">
+	<!-- Latest compiled and minified JavaScript -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/js/bootstrap-select.min.js"></script>
+	<script src="js/popup.js"></script>
+	<link href="css/popup.css" rel="stylesheet" media="screen">	
+</head>
+<body>
+    <div class="panel panel-warning">
+		<div class="panel-heading"><h1 class="text-center">Crypto Alert</h1></div>
+		<div class="panel-body">
+		<div class="container">
+		<select class="selectpicker" data-show-subtext="true" data-live-search="true">
+			<option data-subtext="(BTC)">Bitcoin</option>
+			<option data-subtext="(LTC)">Litecoin</option>
+			<option data-subtext="(ETH)">Ethereum </option>
+			<option data-subtext="(XRP)">Ripple</option>
+			<option data-subtext="(BCH)">Bitcoin Cash</option>
+			<option data-subtext="(MIOTA)">IOTA</option>
+		</select>
+		</div>
+
+			<div id="bitAlertDiv">
+				<div class="col-md-12"><h3><label>Bitcoin ( 1 BTC):</label> $<span id="price"></span></h3></div>
+				<div class="col-md-12"><h3><label>Percent Change (24hr.):</label> <span id="change"></span> %</h3></div>
+				<div class="col-md-12"><h3><label>Market Cap:</label> $<span id="marketCap"></span></h3></div>
+				<div class="col-md-12">
+					<div class="form-group">
+						<label>Set Alert :</label>
+						<div class="make-switch" data-on="warning" data-off="warning"><input type="checkbox" name="my-checkbox" ></div>
+						<div class="input-group alertPrice">
+							<span class="input-group-addon">$</span>
+							<input type="text" id="alertPrice" class="form-control" hidden>
+						</div>
+					</div>
+				</div>
+				<br>
+				<div class="col-md-2"><a href="#" id="buyCoin">Buy On Coinbase </a></div>
+			</div>
+			<div id="errorDiv" hidden>
+				<div class="col-md-12" style="text-align: center"><span class="glyphicon glyphicon-alert" aria-hidden="true"></span></div>
+				<div class="col-md-12" style="text-align: center"><h2>Temporary Unavailable!</h2></div>
+				<div class="col-md-12" style="text-align: center"><h3>Please checkback with us, Sorry for inconvenience...</h2></div>
+			</div>
+		</div>
+    </div>
+</body>	
+</html>

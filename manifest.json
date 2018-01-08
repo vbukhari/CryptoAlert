@@ -1,0 +1,22 @@
+{
+	"manifest_version": 2,
+	"name": "Crypto Alert",
+	"short_name": "Crypto Alert",
+	"version": "1.0",
+	"description": "Extension let user set alert for various crypto currency and notify the user when price is right!",
+	"icons": {
+		"128": "img/cryptoIcon128.png",
+		"48": "img/cryptoIcon48.png",
+		"16": "img/cryptoIcon16.png"
+	},
+	"browser_action": {
+		"default_icon": "img/cryptoIcon16.png",
+		"default_popup": "popup.html"
+	},
+	"content_security_policy": "script-src 'self' https://cdnjs.cloudflare.com https://maxcdn.bootstrapcdn.com https://ajax.googleapis.com; object-src 'self'",
+	"background": {
+        "persistent": true,
+        "scripts": ["js/jquery-3.2.1.min.js", "js/background.js"]  
+    },
+	"permissions":["storage", "notifications"]
+}
