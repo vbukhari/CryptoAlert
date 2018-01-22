@@ -1,8 +1,15 @@
 $(function(){
+	var storage = chrome.storage.local;
 	
 	$('.selectpicker').selectpicker({
-	  style: 'btn-info',
+	  style: 'btn-default',
 	  size: 4
+	});
+	
+	storage.get('coinDDLList', function (result) {
+		_.each(result.coinDDLList, function(obj){
+			$("#cryptCoinDDL").append('<option value="'+ obj.id +'">' + ' #' + obj.rank + ' ' + obj.name + ' <span>(' + obj.symbol + ')</span>' +'</option>').selectpicker('refresh');
+		});
 	});
 	
 	var chkAlertPrice = $("[name='my-checkbox']");
@@ -44,18 +51,27 @@ $(function(){
 			chrome.notifications.create("setBitAlertNotify", notification);
 		});
 	});
-	
-
+	var selectedCoin = "";
+	$('.selectpicker').on('change', function(){
+		selectedCoin = $(this).val();
+		updateCoin(selectedCoin);
+	});
 	
 	$("#buyCoin").click(function(e){
 		e.preventDefault();
 		chrome.tabs.create({url: "https://www.coinbase.com/"});
 	});
 	
-	function update() {
-      $.getJSON("https://api.coinmarketcap.com/v1/ticker/bitcoin/", 
-      function(json){
-		 if(json){
+	
+	function updateCoin(coinid) {
+		var selectedCoinUrl = "";
+		if(selectedCoin)
+			selectedCoinUrl ="https://api.coinmarketcap.com/v1/ticker/" + coinid + "/";
+		else
+			selectedCoinUrl ="https://api.coinmarketcap.com/v1/ticker/bitcoin/";
+		$.getJSON(selectedCoinUrl, 
+		function(json){
+			if(json){
 		 	$.map(json, function(data){
 				$("#price").text(data.price_usd);
 				$("#change").text(data.percent_change_24h);
@@ -81,7 +97,6 @@ $(function(){
 		 }
     });
   }
-  	update();
-	setInterval(update, 30000);
-	//update();
+  	updateCoin(selectedCoin);
+	setInterval(updateCoin, 30000);
 });
