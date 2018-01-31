@@ -15,7 +15,7 @@ $(function(){
 	var chkAlertPrice = $("[name='my-checkbox']");
 	chkAlertPrice.bootstrapSwitch({onColor: 'warning', size: 'mini'});
 	
-	chrome.storage.sync.get(['isAlertSet', 'alertPrice'], function(coin){
+	storage.get(['isAlertSet', 'alertPrice'], function(coin){
 		if(coin.isAlertSet && coin.alertPrice){
 			$(".alertPrice").show();
 		}
@@ -29,19 +29,49 @@ $(function(){
 	});
 	
 	chkAlertPrice.on('switchChange.bootstrapSwitch', function(event, state) {
-		chrome.storage.sync.set({'isAlertSet': state}, function(){
-			if(state){
-				$(".alertPrice").show();
+		var coinID = $("#cryptCoinDDL").val();
+		storage.get('alertList', function(result){
+
+			if (_.isArray(result) && !_.isUndefined(result)) {
+				result = _.map(result, function(item){
+					if(item.alertCoinID == coinID){
+						item.isAlertSet = state;
+
+						return item;
+					}
+				});
+				
+			} 
+			else {
+				result.push({
+					alertCoinID: coinID, isAlertSet: state, alertPrice: $("#alertPrice").val()
+				});
 			}
-			else{
-				$("#alertPrice").val('');
-				$(".alertPrice").hide();
-			}
+
+			localStorage.removeItem("alertList");
+			localStorage.setItem("alertList", result);
 		});
+		if(state){
+			$(".alertPrice").show();
+		}
+		else{
+			$("#alertPrice").val('');
+			$(".alertPrice").hide();
+		}
+		// storage.set({'isAlertSet': state}, function(){
+		// 	if(state){
+		// 		$(".alertPrice").show();
+		// 		storage.set({'alertCoinID': coinID});
+		// 	}
+		// 	else{
+		// 		$("#alertPrice").val('');
+		// 		$(".alertPrice").hide();
+		// 	}
+		// });
 	});
 	
 	$("#alertPrice").change(function(){
-		chrome.storage.sync.set({'alertPrice': $(this).val()}, function(){
+		storage.set({'alertPrice': $(this).val()}, function(){
 			var notification = {
 				type: 'basic',
 				iconUrl: 'img/bitcoin_Icon48.png',
@@ -51,10 +81,10 @@ $(function(){
 			chrome.notifications.create("setBitAlertNotify", notification);
 		});
 	});
-	var selectedCoin = "";
+	//var selectedCoin = "";
 	$('.selectpicker').on('change', function(){
-		selectedCoin = $(this).val();
-		updateCoin(selectedCoin);
+		//selectedCoin = $(this).val();
+		updateCoin();
 	});
 	
 	$("#buyCoin").click(function(e){
@@ -63,10 +93,10 @@ $(function(){
 	});
 	
 	
-	function updateCoin(coinid) {
-		var selectedCoinUrl = "";
+	function updateCoin() {
+		var selectedCoin = $("#cryptCoinDDL").val();
 		if(selectedCoin)
-			selectedCoinUrl ="https://api.coinmarketcap.com/v1/ticker/" + coinid + "/";
+			selectedCoinUrl ="https://api.coinmarketcap.com/v1/ticker/" + selectedCoin + "/";
 		else
 			selectedCoinUrl ="https://api.coinmarketcap.com/v1/ticker/bitcoin/";
 		$.getJSON(selectedCoinUrl, 
@@ -77,12 +107,12 @@ $(function(){
 				$("#change").text(data.percent_change_24h);
 				$("#marketCap").text(data.market_cap_usd.replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,"));
 				
-				chrome.storage.sync.get(['isAlertSet', 'alertPrice'], function(coin){
+				storage.get(['isAlertSet', 'alertPrice',], function(coin){
 					if(data.price_usd <= coin.alertPrice && coin.isAlertSet )
 					{
 						var notification = {
 							type: 'basic',
-							iconUrl: 'img/bitcoin_Icon48.png',
+							iconUrl: 'img/cryptoIcon48.png',
 							title: 'Bitcoin Set Price reached!',
 							message: 'The Bigcoin price has reached your set price!'
 						};
@@ -97,6 +127,6 @@ $(function(){
 		 }
     });
   }
-  	updateCoin(selectedCoin);
+  	updateCoin();
 	setInterval(updateCoin, 30000);
 });

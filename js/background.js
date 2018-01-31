@@ -1,6 +1,7 @@
 $(function(){
 	var storage = chrome.storage.local;
 	var coinList = [];	
+	var alertList = [];
 	//https://files.coinmarketcap.com/generated/search/quick_search.json
 	//https://api.coinmarketcap.com/v1/ticker/
 	$.getJSON("https://api.coinmarketcap.com/v1/ticker/", function(json){
@@ -8,14 +9,16 @@ $(function(){
 			$.map(json, function(coin){
 				coinList.push(_.pick(coin, 'id', 'name', 'symbol', 'rank'));
 			});
-			storage.set({'coinDDLList': coinList});
+			storage.set({'coinDDLList': coinList, 'alertList': alertList});
 		}
 	});
 	
 	function update() {
-		chrome.storage.sync.get(['isAlertSet', 'alertPrice'], function(coin){
-			if(coin.isAlertSet){
-				$.getJSON("https://api.coinmarketcap.com/v1/ticker/bitcoin/", 
+		storage.get(['isAlertSet', 'alertCoinID', 'alertPrice'], function(result){
+			var coinID = result.alertCoinID;
+			debugger;
+			if(result.isAlertSet){
+				$.getJSON("https://api.coinmarketcap.com/v1/ticker/"+ coinID +"/", 
 					function(json){
 					 if(json){
 						$.map(json, function(data){
@@ -23,13 +26,13 @@ $(function(){
 							$("#price").text(data.price_usd);
 							$("#change").text(data.percent_change_24h);
 							$("#marketCap").text(data.market_cap_usd.replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,"));
-							if(data.price_usd <= coin.alertPrice )
+							if(data.price_usd <= result.alertPrice )
 							{
 								var notification = {
 									type: 'basic',
-									iconUrl: 'img/bitcoin_Icon48.png',
+									iconUrl: 'img/cryptoIcon48.png',
 									title: 'Bitcoin Set Price reached!',
-									message: 'The Bigcoin price has reached your set price, Click button below to Buy/Sell your coins!'
+									message: 'The '+ data.name +' price has reached your set price, Click button below to Buy/Sell your coins!'
 								};
 								chrome.notifications.create("setBitAlertNotify", notification);
 							}
