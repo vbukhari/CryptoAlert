@@ -21,29 +21,27 @@
 		<div class="panel-body">
 		<div class="container">
 		<select id="cryptCoinDDL" class="selectpicker" data-show-subtext="true" data-live-search="true">
-			<!-- <option data-subtext="(BTC)">Bitcoin</option> -->
-			<!-- <option data-subtext="(LTC)">Litecoin</option> -->
-			<!-- <option data-subtext="(ETH)">Ethereum </option> -->
-			<!-- <option data-subtext="(XRP)">Ripple</option> -->
-			<!-- <option data-subtext="(BCH)">Bitcoin Cash</option> -->
-			<!-- <option data-subtext="(MIOTA)">IOTA</option> -->
 		</select>
 		</div>
-
 			<div id="bitAlertDiv">
-				<div class="col-md-12"><h3><label>Bitcoin ( 1 BTC):</label> $<span id="price"></span></h3></div>
+				<div class="col-md-12"><h1> $<span id="price"></span></h1></div>
 				<div class="col-md-12"><h3><label>Percent Change (24hr.):</label> <span id="change"></span> %</h3></div>
 				<div class="col-md-12"><h3><label>Market Cap:</label> $<span id="marketCap"></span></h3></div>
 				<div class="col-md-12">
 					<div class="form-group">
 						<label>Set Alert :</label>
 						<div class="make-switch" data-on="warning" data-off="warning"><input type="checkbox" name="my-checkbox" ></div>
-						<div class="input-group alertPrice">
-							<span class="input-group-addon">$</span>
-							<input type="text" id="alertPrice" class="form-control" hidden>
-						</div>
 					</div>
 				</div>
+				<div class="col-md-6 alertPrice">
+					<div class="input-group">
+						<span class="input-group-addon">$</span>
+						<input type="text" class="form-control" id="alertPrice">
+						<span class="input-group-btn">
+							<button class="btn btn-default" type="button" id="setAlertPrice">Set!</button>
+						</span>
+						</div><!-- /input-group -->
+					  </div><!-- /.col-lg-6 -->
 				<br>
 				<div class="col-md-2"><a href="#" id="buyCoin">Buy On Coinbase </a></div>
 			</div>

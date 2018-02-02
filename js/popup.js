@@ -10,6 +10,7 @@ $(function(){
 		_.each(result.coinDDLList, function(obj){
 			$("#cryptCoinDDL").append('<option value="'+ obj.id +'">' + ' #' + obj.rank + ' ' + obj.name + ' <span>(' + obj.symbol + ')</span>' +'</option>').selectpicker('refresh');
 		});
+
 	});
 	
 	var chkAlertPrice = $("[name='my-checkbox']");
@@ -29,28 +30,6 @@ $(function(){
 	});
 	
 	chkAlertPrice.on('switchChange.bootstrapSwitch', function(event, state) {
-		var coinID = $("#cryptCoinDDL").val();
-		storage.get('alertList', function(result){
-
-			if (_.isArray(result) && !_.isUndefined(result)) {
-				result = _.map(result, function(item){
-					if(item.alertCoinID == coinID){
-						item.isAlertSet = state;
-
-						return item;
-					}
-				});
-				
-			} 
-			else {
-				result.push({
-					alertCoinID: coinID, isAlertSet: state, alertPrice: $("#alertPrice").val()
-				});
-			}
-
-			localStorage.removeItem("alertList");
-			localStorage.setItem("alertList", result);
-		});
 		if(state){
 			$(".alertPrice").show();
 		}
@@ -58,16 +37,35 @@ $(function(){
 			$("#alertPrice").val('');
 			$(".alertPrice").hide();
 		}
-		// storage.set({'isAlertSet': state}, function(){
-		// 	if(state){
-		// 		$(".alertPrice").show();
-		// 		storage.set({'alertCoinID': coinID});
-		// 	}
-		// 	else{
-		// 		$("#alertPrice").val('');
-		// 		$(".alertPrice").hide();
-		// 	}
-		// });
+	});
+
+	$("#setAlertPrice").click(function(){
+		var regex = /^[1-9]\d*(((,\d{3}){1})?(\.\d{0,2})?)$/;
+		var amount = $("#alertPrice").val();
+		if(regex.test(amount)){
+			var coinID = $("#cryptCoinDDL").val();
+			storage.get('alertList', function(result){
+				var alertList = [];
+				if (_.isArray(result) && !_.isUndefined(result)) {
+					alertList = _.map(result, function(item){
+						if(item.alertCoinID == coinID){
+							item.isAlertSet = chkAlertPrice.is(":checked");
+							return item;
+						}
+					});
+				} 
+				else {
+					alertList.push({alertCoinID: coinID, isAlertSet: chkAlertPrice.is(":checked"), alertPrice: $("#alertPrice").val()});
+				}
+
+				storage.set({"alertList": alertList});
+				debugger;
+			});
+	
+		}
+		else{
+			return false;
+		}
 	});
 	
 	$("#alertPrice").change(function(){
@@ -81,9 +79,8 @@ $(function(){
 			chrome.notifications.create("setBitAlertNotify", notification);
 		});
 	});
-	//var selectedCoin = "";
+
 	$('.selectpicker').on('change', function(){
-		//selectedCoin = $(this).val();
 		updateCoin();
 	});
 	
