@@ -46,16 +46,21 @@ $(function(){
 			var coinID = $("#cryptCoinDDL").val();
 			storage.get('alertList', function(result){
 				var alertList = [];
-				if (_.isArray(result) && !_.isUndefined(result)) {
-					alertList = _.map(result, function(item){
-						if(item.alertCoinID == coinID){
-							item.isAlertSet = chkAlertPrice.is(":checked");
-							return item;
-						}
-					});
-				} 
-				else {
-					alertList.push({alertCoinID: coinID, isAlertSet: chkAlertPrice.is(":checked"), alertPrice: $("#alertPrice").val()});
+				if (_.isArray(result.alertList) && !_.isUndefined(result) && !_.isNull(result.alertList)) {
+					var isExists = _.find(result.alertList, function(item){
+										return (item.alertCoinID == coinID);
+									});
+					if(result.alertList.length > 0 && isExists){
+						alertList = _.map(result.alertList, function(item){
+							if(item.alertCoinID == coinID){
+								item.isAlertSet = chkAlertPrice.is(":checked");
+								return item;
+							}
+						});
+					}
+					else {
+						alertList.push({alertCoinID: coinID, isAlertSet: chkAlertPrice.is(":checked"), alertPrice: $("#alertPrice").val()});
+					}	
 				}
 
 				storage.set({"alertList": alertList});
