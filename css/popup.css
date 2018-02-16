@@ -22,6 +22,14 @@ body, section {			/* Change width and height to own preferences */
 	font-size: 100px;
 }
 
+.glyphicon-chevron-up{
+	color: green;
+}
+
+.glyphicon-chevron-down{
+	color: red;
+}
+
 /* Basic style tweaks */
 section { padding: 5px;}
 

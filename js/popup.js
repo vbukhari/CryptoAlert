@@ -108,6 +108,10 @@ $(function(){
 				$("#price").text(data.price_usd);
 				$("#change").text(data.percent_change_24h);
 				$("#marketCap").text(data.market_cap_usd.replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,"));
+				if(data.percent_change_24h > 0)
+					$("#ratioIcon").addClass('glyphicon-chevron-up').removeClass('glyphicon-chevron-down');
+				else
+					$("#ratioIcon").addClass('glyphicon-chevron-down').removeClass('glyphicon-chevron-up');
 				
 				storage.get(['isAlertSet', 'alertPrice',], function(coin){
 					if(data.price_usd <= coin.alertPrice && coin.isAlertSet )
